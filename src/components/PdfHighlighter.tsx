@@ -180,18 +180,16 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     this.attachRef();
 
     this.viewer =
-      this.viewer._currentPageNumber &&
-      this.viewer._currentPageNumber === this.props.currentPageNumber
-        ? this.viewer
-        : new PDFSinglePageViewer({
-            container: this.containerNodeRef!.current!,
-            eventBus: this.eventBus,
-            // enhanceTextSelection: true, // deprecated. https://github.com/mozilla/pdf.js/issues/9943#issuecomment-409369485
-            textLayerMode: 2,
-            removePageBorders: true,
-            linkService: this.linkService,
-            l10n: NullL10n,
-          });
+      this.viewer ||
+      new PDFSinglePageViewer({
+        container: this.containerNodeRef!.current!,
+        eventBus: this.eventBus,
+        // enhanceTextSelection: true, // deprecated. https://github.com/mozilla/pdf.js/issues/9943#issuecomment-409369485
+        textLayerMode: 2,
+        removePageBorders: true,
+        linkService: this.linkService,
+        l10n: NullL10n,
+      });
 
     this.linkService.setDocument(pdfDocument);
     this.linkService.setViewer(this.viewer);

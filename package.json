@@ -1,6 +1,6 @@
 {
   "name": "react-pdf-highlighter-single-page",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "Set of React components for PDF annotation",
   "author": "Artem Tyurin <artem.tyurin@gmail.com>",
   "license": "MIT",
