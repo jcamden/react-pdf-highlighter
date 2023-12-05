@@ -180,6 +180,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     this.attachRef();
 
     this.viewer =
+      this.viewer._currentPageNumber &&
       this.viewer._currentPageNumber === this.props.currentPageNumber
         ? this.viewer
         : new PDFSinglePageViewer({
