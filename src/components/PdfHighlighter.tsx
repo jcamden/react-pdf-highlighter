@@ -6,6 +6,7 @@ import {
   EventBus,
   NullL10n,
   PDFLinkService,
+  PDFSinglePageViewer,
   PDFViewer,
 } from "pdfjs-dist/legacy/web/pdf_viewer";
 import type {
@@ -80,6 +81,7 @@ interface Props<T_HT> {
     transformSelection: () => void
   ) => JSX.Element | null;
   enableAreaSelection: (event: MouseEvent) => boolean;
+  currentPageNumber: number;
 }
 
 const EMPTY_ID = "empty-id";
@@ -90,6 +92,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 > {
   static defaultProps = {
     pdfScaleValue: "auto",
+    currentPageNumber: 1,
   };
 
   state: State<T_HT> = {
@@ -175,7 +178,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
     this.viewer =
       this.viewer ||
-      new PDFViewer({
+      new PDFSinglePageViewer({
         container: this.containerNodeRef!.current!,
         eventBus: this.eventBus,
         // enhanceTextSelection: true, // deprecated. https://github.com/mozilla/pdf.js/issues/9943#issuecomment-409369485
@@ -188,6 +191,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     this.linkService.setDocument(pdfDocument);
     this.linkService.setViewer(this.viewer);
     this.viewer.setDocument(pdfDocument);
+    this.viewer._currentPageNumber = this.props.currentPageNumber;
     // debug
     (window as any).PdfViewer = this;
   }
