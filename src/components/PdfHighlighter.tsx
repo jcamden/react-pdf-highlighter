@@ -13,6 +13,7 @@ import type {
   IHighlight,
   LTWH,
   LTWHP,
+  OnSelectionFinished,
   Position,
   Scaled,
   ScaledPosition,
@@ -74,12 +75,7 @@ interface Props<T_HT> {
   scrollRef: (scrollTo: (highlight: T_HT) => void) => void;
   pdfDocument: PDFDocumentProxy;
   pdfScaleValue: string;
-  onSelectionFinished: (
-    position: ScaledPosition,
-    content: { text?: string; image?: string },
-    hideTipAndSelection: () => void,
-    transformSelection: () => void
-  ) => JSX.Element | null;
+  onSelectionFinished: OnSelectionFinished;
   enableAreaSelection: (event: MouseEvent) => boolean;
   currentPageNumber: number;
 }
@@ -522,18 +518,18 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
     this.setTip(
       viewportPosition,
-      onSelectionFinished(
-        scaledPosition,
+      onSelectionFinished({
+        position: scaledPosition,
         content,
-        () => this.hideTipAndSelection(),
-        () =>
+        hideTipAndSelection: () => this.hideTipAndSelection(),
+        transformSelection: () =>
           this.setState(
             {
               ghostHighlight: { position: scaledPosition },
             },
             () => this.renderHighlightLayers()
-          )
-      )
+          ),
+      })
     );
   };
 
@@ -608,11 +604,11 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
                 this.setTip(
                   viewportPosition,
-                  onSelectionFinished(
-                    scaledPosition,
-                    { image },
-                    () => this.hideTipAndSelection(),
-                    () => {
+                  onSelectionFinished({
+                    position: scaledPosition,
+                    content: { image },
+                    hideTipAndSelection: () => this.hideTipAndSelection(),
+                    transformSelection: () => {
                       console.log("setting ghost highlight", scaledPosition);
                       this.setState(
                         {
@@ -626,8 +622,8 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
                           this.renderHighlightLayers();
                         }
                       );
-                    }
-                  )
+                    },
+                  })
                 );
               }}
             />

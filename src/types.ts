@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface LTWH {
   left: number;
   top: number;
@@ -76,3 +78,17 @@ export interface Page {
   node: HTMLElement;
   number: number;
 }
+
+export interface OnSelectionFinishedProps {
+  position: ScaledPosition;
+  content: {
+    text?: string;
+    image?: string;
+  };
+  hideTipAndSelection: () => void;
+  transformSelection: () => void;
+}
+
+export type OnSelectionFinished = (
+  props: OnSelectionFinishedProps
+) => JSX.Element | null;
