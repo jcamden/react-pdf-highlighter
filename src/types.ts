@@ -1,5 +1,3 @@
-import { T_ViewportHighlight } from "./components/PdfHighlighter";
-
 export interface LTWH {
   left: number;
   top: number;
