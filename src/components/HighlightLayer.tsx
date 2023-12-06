@@ -13,15 +13,15 @@ interface HighlightLayerProps<T_HT> {
   highlightsByPage: { [pageNumber: string]: Array<T_HT> };
   pageNumber: string;
   scrolledToHighlightId: string;
-  highlightTransform: (
-    highlight: any,
-    index: number,
-    setTip: (highlight: any, callback: (highlight: any) => JSX.Element) => void,
-    hideTip: () => void,
-    viewportToScaled: (rect: LTWHP) => Scaled,
-    screenshot: (position: LTWH) => string,
-    isScrolledTo: boolean
-  ) => JSX.Element;
+  highlightTransform: (props: {
+    highlight: any;
+    index: number;
+    setTip: (highlight: any, callback: (highlight: any) => JSX.Element) => void;
+    hideTip: () => void;
+    viewportToScaled: (rect: LTWHP) => Scaled;
+    screenshot: (position: LTWH) => string;
+    isScrolledTo: boolean;
+  }) => JSX.Element;
   tip: {
     highlight: any;
     callback: (highlight: any) => JSX.Element;
@@ -64,27 +64,28 @@ export function HighlightLayer<T_HT extends IHighlight>({
 
         const isScrolledTo = Boolean(scrolledToHighlightId === id);
 
-        return highlightTransform(
-          viewportHighlight,
-          index,
-          (highlight, callback) => {
+        return highlightTransform({
+          highlight: viewportHighlight,
+          index: index,
+          setTip: (highlight, callback) => {
             setState({
               tip: { highlight, callback },
             });
 
             showTip(highlight, callback(highlight));
           },
-          hideTipAndSelection,
-          (rect) => {
+          hideTip: hideTipAndSelection,
+          viewportToScaled: (rect) => {
             const viewport = viewer.getPageView(
               (rect.pageNumber || parseInt(pageNumber)) - 1
             ).viewport;
 
             return viewportToScaled(rect, viewport);
           },
-          (boundingRect) => screenshot(boundingRect, parseInt(pageNumber)),
-          isScrolledTo
-        );
+          screenshot: (boundingRect) =>
+            screenshot(boundingRect, parseInt(pageNumber)),
+          isScrolledTo,
+        });
       })}
     </div>
   );

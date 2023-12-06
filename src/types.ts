@@ -1,3 +1,5 @@
+import { T_ViewportHighlight } from "./components/PdfHighlighter";
+
 export interface LTWH {
   left: number;
   top: number;
@@ -90,3 +92,17 @@ export interface OnSelectionFinishedProps {
 export type OnSelectionFinished = (
   props: OnSelectionFinishedProps
 ) => JSX.Element | null;
+
+export interface HighlightTransformProps {
+  highlight: any;
+  index: number;
+  setTip: (highlight: any, callback: (highlight: any) => JSX.Element) => void;
+  hideTip: () => void;
+  viewportToScaled: (rect: LTWHP) => Scaled;
+  screenshot: (position: LTWH) => string;
+  isScrolledTo: boolean;
+}
+
+export type HighlightTransform = (
+  props: HighlightTransformProps
+) => JSX.Element;
